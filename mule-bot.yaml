@@ -17,8 +17,6 @@ spec:
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
-      imagePullSecrets:
-      - name: mayadatasecret
           env:
            - name: ADMIN_API_KEY
              value: "QUM0MzZBQTFGQzQzNTk1OUMxNDA6Y3hhMjVjRzRhU0tNTFN2TlRTenBXZ3RqNEN0emE0YjQ5Nnc2UVo3Mg=="
@@ -28,6 +26,8 @@ spec:
              value: "https://staging-app.mayaonline.io/v3/"
            - name: SLASH_COMMAND
              value: "/mayastage"
+      imagePullSecrets:
+      - name: mayadatasecret
 ---
 apiVersion: v1
 kind: Service
