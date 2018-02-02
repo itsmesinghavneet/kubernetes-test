@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    flux.weave.works/automated: "true"
+  name: maya-mulebot
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app : chat-server
+    spec:
+      containers:
+        - name: chat-server
+          image: mayadataio/maya-chatops:1f4cd6c
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+      imagePullSecrets:
+      - name: mayadatasecret
+          env:
+           - name: ADMIN_API_KEY
+             value: "QUM0MzZBQTFGQzQzNTk1OUMxNDA6Y3hhMjVjRzRhU0tNTFN2TlRTenBXZ3RqNEN0emE0YjQ5Nnc2UVo3Mg=="
+           - name: VERIFICATION_TOKEN
+             value: "KDSSrotb1gwD9LW3fJjDiobB"
+           - name: MAYA_SERVER_IP
+             value: "https://staging-app.mayaonline.io/v3/"
+           - name: SLASH_COMMAND
+             value: "/mayastage"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: chat-server
+  name: mule-bot-service
+spec:
+  type: NodePort
+  ports:
+  - name: chat-server
+    port: 8080
+    nodePort: 30550
+    protocol: TCP
+  selector:
+    app: chat-server
